@@ -33,6 +33,9 @@ int Te_GetKey()
   int b = analogRead(A0);
   if (b > 1000)
     return btnNone;
+  else
+    randomSeed(millis());
+
   if (b < 50)
     return btnRight;
   if (b < 180)

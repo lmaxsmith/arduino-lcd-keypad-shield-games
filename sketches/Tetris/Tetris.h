@@ -5,13 +5,12 @@
 #define BUTTON_ROT 11
 #define BUTTON_DOWN 10
 
-#define btnRight  0
-#define btnUp     1
-#define btnDown   2
-#define btnLeft   3
+#define btnRight 0
+#define btnUp 1
+#define btnDown 2
+#define btnLeft 3
 #define btnSelect 4
-#define btnNone   5
-
+#define btnNone 5
 
 bool BUTTON_LEFT_LAST = false;
 bool BUTTON_RIGHT_LAST = false;
@@ -29,14 +28,21 @@ void Te_Init()
   pinMode(BUTTON_ROT, INPUT);*/
 }
 
-int Te_GetKey() {
+int Te_GetKey()
+{
   int b = analogRead(A0);
-  if (b > 1000) return btnNone;
-  if (b < 50) return btnRight;
-  if (b < 180) return btnUp;
-  if (b < 330) return btnDown;
-  if (b < 520) return btnLeft;
-  if (b < 700) return btnSelect;    
+  if (b > 1000)
+    return btnNone;
+  if (b < 50)
+    return btnRight;
+  if (b < 180)
+    return btnUp;
+  if (b < 330)
+    return btnDown;
+  if (b < 520)
+    return btnLeft;
+  if (b < 700)
+    return btnSelect;
 }
 
 void Te_Draw()
@@ -59,19 +65,19 @@ void Te_DeleteRow(int row)
   for (int i = 0; i < 15; i++)
   {
     Dp_DrawLine(1, row, 8, true, sw);
-    Dp_DrawLine(0,0,10,true,!sw); // Linie Oben H
-    Dp_DrawLine(0,15,10,true,!sw); // Linie Unten H
-    Dp_DrawLine(0,0,16,false,!sw); // Linie Links V
-    Dp_DrawLine(9,0,16,false,!sw); // Linie Rechts V
+    Dp_DrawLine(0, 0, 10, true, !sw);  // Linie Oben H
+    Dp_DrawLine(0, 15, 10, true, !sw); // Linie Unten H
+    Dp_DrawLine(0, 0, 16, false, !sw); // Linie Links V
+    Dp_DrawLine(9, 0, 16, false, !sw); // Linie Rechts V
     Dp_Draw();
     delay(90);
     sw = sw ? false : true;
   }
   Dp_DrawLine(1, row, 8, true, false);
-  Dp_DrawLine(0,0,10,true,true); // Linie Oben H
-  Dp_DrawLine(0,15,10,true,true); // Linie Unten H
-  Dp_DrawLine(0,0,16,false,true); // Linie Links V
-  Dp_DrawLine(9,0,16,false,true); // Linie Rechts V
+  Dp_DrawLine(0, 0, 10, true, true);  // Linie Oben H
+  Dp_DrawLine(0, 15, 10, true, true); // Linie Unten H
+  Dp_DrawLine(0, 0, 16, false, true); // Linie Links V
+  Dp_DrawLine(9, 0, 16, false, true); // Linie Rechts V
   Dp_Draw();
   for (int zeile = row; zeile > 2; zeile--)
   {
@@ -104,7 +110,7 @@ void Te_CheckRows()
     }
   }
   if (rowWins > 0)
-    Te_AddPoints(random(9, 15) * (10 + pow(3,rowWins) * 10));
+    Te_AddPoints(random(9, 15) * (10 + pow(3, rowWins) * 10));
 }
 
 void Te_Reload()
@@ -116,7 +122,7 @@ void Te_Reload()
     delay(60);
   }
   delay(400);
-  for (int row = TE_HEIGHT; row >= 1 ; row--)
+  for (int row = TE_HEIGHT; row >= 1; row--)
   {
     Dp_DrawLine(1, row, 8, true, false);
     Dp_Draw();
@@ -132,13 +138,13 @@ void Te_Reload()
 
 void Te_Update(long frameCount)
 {
-  if (frameCount % 40  == 0)
+  if (frameCount % 40 == 0)
   {
     currentStone.y++;
     if (St_HitTest(currentStone)) // Stein ist unten Angekommen.
     {
       currentStone.y--;
-      for(int i = 0; i < 5; i++)
+      for (int i = 0; i < 5; i++)
       {
         St_Print(currentStone, true);
         Dp_Draw();
@@ -155,8 +161,9 @@ void Te_Update(long frameCount)
         lcd.setCursor(3, 1);
         lcd.write("Game Over!");
         delay(1000);
-        //while (!digitalRead(BUTTON_LEFT) || !digitalRead(BUTTON_RIGHT));
-        while (!(Te_GetKey() == btnLeft) || !(Te_GetKey() == btnRight));
+        // while (!digitalRead(BUTTON_LEFT) || !digitalRead(BUTTON_RIGHT));
+        while (!(Te_GetKey() == btnLeft) || !(Te_GetKey() == btnRight))
+          ;
         Te_Reload();
       }
       Te_AddPoints(random(1, 4) * 10);
@@ -165,13 +172,12 @@ void Te_Update(long frameCount)
     }
   }
 
-  if(frameCount % 10) // Nach Unten Schieben frei geben (Damit man den Knopf gedrückt lassen kann)
+  if (frameCount % 10) // Nach Unten Schieben frei geben (Damit man den Knopf gedrückt lassen kann)
   {
-    BUTTON_DOWN_LAST=false;
+    BUTTON_DOWN_LAST = false;
   }
 
-
-  //if (digitalRead(BUTTON_LEFT))
+  // if (digitalRead(BUTTON_LEFT))
   if (Te_GetKey() == btnLeft)
   {
     if (!BUTTON_LEFT_LAST)
@@ -184,9 +190,10 @@ void Te_Update(long frameCount)
         currentStone.x++;
     }
   }
-  else BUTTON_LEFT_LAST = false;
+  else
+    BUTTON_LEFT_LAST = false;
 
-  //if (digitalRead(BUTTON_RIGHT))
+  // if (digitalRead(BUTTON_RIGHT))
   if (Te_GetKey() == btnRight)
   {
     if (!BUTTON_RIGHT_LAST)
@@ -199,9 +206,10 @@ void Te_Update(long frameCount)
         currentStone.x--;
     }
   }
-  else BUTTON_RIGHT_LAST = false;
-  
-  //if (digitalRead(BUTTON_ROT))
+  else
+    BUTTON_RIGHT_LAST = false;
+
+  // if (digitalRead(BUTTON_ROT))
   if (Te_GetKey() == btnUp)
   {
     if (!BUTTON_ROT_LAST)
@@ -214,9 +222,10 @@ void Te_Update(long frameCount)
         St_BackRotate(&currentStone);
     }
   }
-  else BUTTON_ROT_LAST = false;
+  else
+    BUTTON_ROT_LAST = false;
 
-  //if (digitalRead(BUTTON_DOWN))
+  // if (digitalRead(BUTTON_DOWN))
   if (Te_GetKey() == btnDown)
   {
     if (!BUTTON_DOWN_LAST)
@@ -229,5 +238,6 @@ void Te_Update(long frameCount)
         currentStone.y--;
     }
   }
-  else BUTTON_DOWN_LAST = false;
+  else
+    BUTTON_DOWN_LAST = false;
 }
